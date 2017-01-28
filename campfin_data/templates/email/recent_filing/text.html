@@ -1,0 +1,9 @@
+{% load humanize %}
+
+Found {{ data.contribs|length|intcomma }} contributions of ${{ data.amount|floatformat:2|intcomma }} or more from {{ data.begin_date|date:"l, M jS, Y" }} to present
+
+{% for contrib in data.contribs %}
+    {{ forloop.counter }}) ${{ contrib.amount|floatformat:2|intcomma }} from {{ contrib.donor }} to {{ contrib.filing_committee.name }} on {{ contrib.date|date:"l, M jS, Y" }}
+{% endfor %}
+
+email the maintainer: {{ maintainer }}

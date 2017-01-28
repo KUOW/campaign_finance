@@ -1,0 +1,24 @@
+{% extends "campfin_data/base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div class="container">
+  	<div class="row">
+	    <h1>Refund</h1>
+      <p class="lead"><strong>From</strong> <a href="{{ refund.filing_committee.get_absolute_url }}">{{ refund.filing_committee.name }}</a></p>
+	    <p class="lead"><strong>To</strong> {{ refund.donor }}</p>
+	    <p class="lead"><strong>Amount</strong> ${{ refund.amount|floatformat:2|intcomma }}</p>
+	    <p class="lead"><strong>On</strong> {{ refund.date }} (filing year {{ refund.filing_committee.filing_year|safe }})</p>
+      <p class="lead"><strong>Description</strong> {{ refund.description }}</p>
+      <p class="lead"><strong>Primary/General</strong> {{ refund.primary_general }}</p>
+	    <hr>
+	</div>
+    <div class="row">
+        <h2>Recipient details</h2>
+        <p class="lead"><strong>City</strong> {{ refund.city }}</p>
+        <p class="lead"><strong>State</strong> {{ refund.state }}</p>
+        <p class="lead"><strong>Zipcode</strong> {{ refund.zipcode }}</p>
+    </div>
+  </div>
+{% endblock content %}

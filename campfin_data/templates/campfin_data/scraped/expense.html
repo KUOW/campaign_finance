@@ -1,0 +1,24 @@
+{% extends "campfin_data/base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div class="container">
+  	<div class="row">
+	    <h1>Expense</h1>
+      <p class="lead"><strong>Paid by</strong> <a href="{{ expense.filing_committee.get_absolute_url }}">{{ expense.filing_committee.name }}</a></p>
+	    <p class="lead"><strong>To</strong> {{ expense.vendor }}</p>
+	    <p class="lead"><strong>Amount</strong> ${{ expense.amount|floatformat:2|intcomma }}</p>
+	    <p class="lead"><strong>On</strong> {{ expense.date }} (filing year {{ expense.filing_committee.filing_year|safe }})</p>
+      <p class="lead"><strong>For</strong> {{ expense.description }}</p>
+      <p class="lead"><strong>Primary/General</strong> {{ expense.primary_general }}</p>
+	    <hr>
+	</div>
+    <div class="row">
+        <h2>Vendor details</h2>
+        <p class="lead"><strong>City</strong> {{ expense.city }}</p>
+        <p class="lead"><strong>State</strong> {{ expense.state }}</p>
+        <p class="lead"><strong>Zipcode</strong> {{ expense.zipcode }}</p>
+    </div>
+  </div>
+{% endblock content %}

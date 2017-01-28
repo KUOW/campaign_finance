@@ -1,0 +1,5 @@
+*.pyc
+data/
+nohup.out
+notebooks/*.csv
+.ipynb_checkpoints/

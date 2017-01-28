@@ -1,0 +1,74 @@
+html, body, * {
+	font-family: "Lato", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+}
+
+.logo {
+	height: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.container {
+	padding-top: 60px;
+}
+
+#year_container {
+	margin-top: 7px;
+}
+
+.header {
+	text-align: center;
+	text-decoration: underline;
+}
+
+.search-form {
+	float: right !important;
+	margin-bottom: 0;
+}
+
+.no-results {
+	color: #bbb;
+}
+
+.results-container, .static-results-container {
+	max-height: 33%;
+	overflow-y: auto;
+}
+
+.results-container {
+	cursor: pointer;
+}
+
+.static-results-container {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.connection-search {
+	width: 75%;
+	display: flex;
+}
+
+.connection-finder, .connection-current {
+	max-height: 33%;
+	overflow-y: auto;
+}
+
+.type-name-conatiner {
+	display: flex;
+}
+
+#connections-map {
+	height: 45%;
+}
+
+.donor-contract-explanation {
+	font-size: 0.7em;
+}
+
+.centered {
+	text-align: center;
+}
+
+/* Fixing Django debug toolbar hiding itself too well */
+[hidden][style="display: block;"] { display: block !important; }

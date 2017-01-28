@@ -1,0 +1,3 @@
+{{ object.donor }}
+{{ object.employer }}
+{{ object.occupation }}

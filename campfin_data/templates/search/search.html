@@ -1,0 +1,65 @@
+{% extends 'campfin_data/base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    <div class="container">
+        <h2>Search</h2>
+
+        <form method="get" action=".">
+            <table>
+                {{ form.as_table }}
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit" value="Search">
+                    </td>
+                </tr>
+            </table>
+
+            {% if query %}
+                <h3>Results</h3>
+
+                {% for result in page.object_list %}
+                    {% ifequal result.model_name 'scrapedcommittee' %}
+                        <p>
+                            <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }} ({{ result.object.party }}), {{ result.object.office }}, {{ result.object.filing_year|safe }}</a>
+                        </p>
+                    {% endifequal %}
+                    {% ifequal result.model_name 'scrapedcontribution' %}
+                        <p>
+                            <a href="{{ result.object.get_absolute_url }}">${{ result.object.amount|floatformat:0|intcomma }} from {{ result.object.donor }} to {{ result.object.filing_committee.name }} on {{ result.object.date }} ({{ result.object.filing_committee.filing_year|safe }})</a>
+                        </p>
+                    {% endifequal %}
+                    {% ifequal result.model_name 'scrapedinkind' %}
+                        <p>
+                            <a href="{{ result.object.get_absolute_url }}">${{ result.object.amount|floatformat:2|intcomma }} from {{ result.object.donor }} to {{ result.object.filing_committee.name }} on {{ result.object.date }} ({{ result.object.filing_committee.filing_year|safe }})</a>
+                        </p>
+                    {% endifequal %}
+                    {% ifequal result.model_name 'scrapedexpense' %}
+                        <p>
+                            <a href="{{ result.object.get_absolute_url }}">${{ result.object.amount|floatformat:2|intcomma }} to {{ result.object.vendor }} from {{ result.object.filing_committee.name }} on {{ result.object.date }} ({{ result.object.filing_committee.filing_year|safe }})</a>
+                        </p>
+                    {% endifequal %}
+                    {% ifequal result.model_name 'scrapedrefund' %}
+                        <p>
+                            <a href="{{ result.object.get_absolute_url }}">${{ result.object.amount|floatformat:0|intcomma }} from {{ result.object.filing_committee.name }} to {{ result.object.donor }} on {{ result.object.date }} ({{ result.object.filing_committee.filing_year|safe }})</a>
+                        </p>
+                    {% endifequal %}
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
+
+                {% if page.has_previous or page.has_next %}
+                    <div>
+                        {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                        |
+                        {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                {# Show some example queries to run, maybe query syntax, something else? #}
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

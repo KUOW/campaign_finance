@@ -1,0 +1,2 @@
+{{ object.filer_id }}
+{{ object.name }}

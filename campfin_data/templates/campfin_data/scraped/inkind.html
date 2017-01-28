@@ -1,0 +1,26 @@
+{% extends "campfin_data/base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div class="container">
+  	<div class="row">
+	    <h1>In-kind Contribution</h1>
+	    <p class="lead"><strong>From</strong> {{ inkind.donor }}</p>
+	    <p class="lead"><strong>To</strong> <a href="{{ inkind.filing_committee.get_absolute_url }}">{{ inkind.filing_committee.name }}</a></p>
+      <p class="lead"><strong>Description</strong> {{ inkind.description }}</p>
+	    <p class="lead"><strong>Amount</strong> ${{ inkind.amount|floatformat:2|intcomma }}</p>
+	    <p class="lead"><strong>On</strong> {{ inkind.date }} (filing year {{ inkind.filing_committee.filing_year|safe }})</p>
+      <p class="lead"><strong>Primary/General</strong> {{ inkind.primary_general }}</p>
+	    <hr>
+	</div>
+    <div class="row">
+        <h2>Contributor details</h2>
+        <p class="lead"><strong>Employer</strong> {{ inkind.employer }}</p>
+        <p class="lead"><strong>Occupation</strong> {{ inkind.occupation }}</p>
+        <p class="lead"><strong>City</strong> {{ inkind.city }}</p>
+        <p class="lead"><strong>State</strong> {{ inkind.state }}</p>
+        <p class="lead"><strong>Zipcode</strong> {{ inkind.zipcode }}</p>
+    </div>
+  </div>
+{% endblock content %}

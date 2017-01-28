@@ -1,0 +1,4 @@
+{{ object.donor }}
+{{ object.employer }}
+{{ object.occupation }}
+{{ object.description }}

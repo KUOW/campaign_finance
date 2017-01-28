@@ -1,0 +1,280 @@
+{% extends "campfin_data/base.html" %}
+
+{% load humanize %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
+{% endblock styles %}
+
+{% block content %}
+  <div class="container">
+  	<div class="row">
+        {% if committee %}
+    	    <h1 class="header">{{ committee.name }}</h1>
+        {% else %}
+            <h1 class="header">{{ committees.0.name }}</h1>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% if committee %}
+            <div class="col-xs-12 col-sm-6">
+        	    <p class="lead"><strong><a href="{{ committee.pdc_url }}">PDC URL</a></strong></p>
+        	    <p class="lead"><strong>Filer ID:</strong> {{ committee.filer_id }}</p>
+                <p class="lead"><strong>Filing Year:</strong> {{ committee.filing_year|safe }}</p>
+                {% if other_years %}
+                    <p class="lead"><strong>Other years:</strong> {% for year in other_years %}<a href="{{ year.get_absolute_url }}">{{ year.filing_year|safe }}</a>, {% endfor %}<a href="/data/committees/filer_id/{{ committee.filer_id }}/">all years combined</a></p>
+                {% endif %}
+        	    <p class="lead"><strong>Party:</strong> {{ committee.party }}</p>
+        	    <p class="lead"><strong>Office:</strong> {{ committee.office }}</p>
+        	    <p class="lead"><strong>Committee Group:</strong> {{ committee.committee_group }}</p>
+            </div>
+        {% endif %}
+        {% if committees %}
+            <div class="col-xs-12 col-sm-6">
+                <p class="lead"><strong>Filer ID:</strong> {{ committees.0.filer_id }}</p>
+                <p class="lead"><strong>Filing years:</strong> {% for year in committees %}<a href="{{ year.get_absolute_url }}">{{ year.filing_year|safe }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            </div>
+        {% endif %}
+        {% if totals %}
+            <div class="col-xs-12 col-sm-6">
+                <h2>Totals</h2>
+                <p>These are scraped directly from the PDC, and hence don't necessarily correspond with database-driven calculations.</p>
+                <p class="lead"><strong>Raised</strong> ${{ totals.raised|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Spent</strong> ${{ totals.spent|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Inkind contributions of</strong> ${{ totals.inkinds|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Received loans of</strong> ${{ totals.loans|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Independent expenditures supporting </strong> ${{ totals.ie_for|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Independent expenditures opposing </strong> ${{ totals.ie_against|floatformat:2|intcomma }}</p>
+            </div>
+        {% endif %}
+        {% if aggregated_totals %}
+            <div class="col-xs-12 col-sm-6">
+                <h2>Totals</h2>
+                <p>These are scraped directly from the PDC, and hence don't necessarily correspond with database-driven calculations.</p>
+                <p class="lead"><strong>Raised</strong> ${{ aggregated_totals.raised__sum|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Spent</strong> ${{ aggregated_totals.spent__sum|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Inkind contributions of</strong> ${{ aggregated_totals.inkinds__sum|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Received loans of</strong> ${{ aggregated_totals.loans__sum|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Independent expenditures supporting </strong> ${{ aggregated_totals.ie_for__sum|floatformat:2|intcomma }}</p>
+                <p class="lead"><strong>Independent expenditures opposing </strong> ${{ aggregated_totals.ie_against__sum|floatformat:2|intcomma }}</p>
+            </div>
+        {% endif %}
+	</div>
+    <div class="row">
+        <h2>Contributions (cash)</h2>
+        <table id="contrib_table">
+            <thead>
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Employer</th>
+                    <th>Occupation</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                    <th>Primary/General</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Employer</th>
+                    <th>Occupation</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                    <th>Primary/General</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <hr>
+    <div class="row">
+        <h2>Contributions (inkind)</h2>
+        <table id="inkind_table">
+            <thead>
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Employer</th>
+                    <th>Occupation</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                    <th>Primary/General</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Employer</th>
+                    <th>Occupation</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                    <th>Primary/General</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <hr>
+    <div class="row">
+        <h2>Expenses</h2>
+        <table id="expense_table">
+            <thead>
+                <tr>
+                    <th>Vendor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Vendor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <hr>
+    <div class="row">
+        <h2>Refunds</h2>
+        <table id="refund_table">
+            <thead>
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Donor</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zipcode</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#contrib_table').DataTable({
+                'order': [[1, 'desc'], [2, 'desc'], [0, 'asc']],
+                {% if committee %}
+                    'ajax': '/data/json/committee_contribs/{{ committee.id|safe }}/',
+                {% else %}
+                    'ajax': '/data/json/committee_contribs/filer_id/{{ committees.0.filer_id }}/',
+                {% endif %}
+                'columns': [
+                    {'data': 'donor'},
+                    {
+                        'data': 'amount',
+                        'render': $.fn.dataTable.render.number(',', '.', 2, '$')
+                    },
+                    {'data': 'date'},
+                    {'data': 'employer'},
+                    {'data': 'occupation'},
+                    {'data': 'city'},
+                    {'data': 'state'},
+                    {'data': 'zipcode'},
+                    {'data': 'primary_general'}
+                ]
+            });
+            $('#inkind_table').DataTable({
+                'order': [[1, 'desc'], [2, 'desc'], [0, 'asc']],
+                {% if committee %}
+                    'ajax': '/data/json/committee_inkinds/{{ committee.id|safe }}/',
+                {% else %}
+                    'ajax': '/data/json/committee_inkinds/filer_id/{{ committees.0.filer_id|safe }}/',
+                {% endif %}
+                'columns': [
+                    {'data': 'donor'},
+                    {
+                        'data': 'amount',
+                        'render': $.fn.dataTable.render.number(',', '.', 2, '$')
+                    },
+                    {'data': 'date'},
+                    {'data': 'employer'},
+                    {'data': 'occupation'},
+                    {'data': 'description'},
+                    {'data': 'city'},
+                    {'data': 'state'},
+                    {'data': 'zipcode'},
+                    {'data': 'primary_general'}
+                ]
+            });
+            $('#expense_table').DataTable({
+                'order': [[1, 'desc'], [2, 'desc'], [0, 'asc']],
+                {% if committee %}
+                    'ajax': '/data/json/committee_expenses/{{ committee.id|safe }}/',
+                {% else %}
+                    'ajax': '/data/json/committee_expenses/filer_id/{{ committees.0.filer_id|safe }}/',
+                {% endif %}
+                'columns': [
+                    {'data': 'vendor'},
+                    {
+                        'data': 'amount',
+                        'render': $.fn.dataTable.render.number(',', '.', 2, '$')
+                    },
+                    {'data': 'date'},
+                    {'data': 'description'},
+                    {'data': 'city'},
+                    {'data': 'state'},
+                    {'data': 'zipcode'}
+                ]
+            });
+            $('#refund_table').DataTable({
+                'order': [[1, 'desc'], [2, 'desc'], [0, 'asc']],
+                {% if committee %}
+                    'ajax': '/data/json/committee_refunds/{{ committee.id|safe }}/',
+                {% else %}
+                    'ajax': '/data/json/committee_refunds/filer_id/{{ committees.0.filer_id|safe }}/',
+                {% endif %}
+                'columns': [
+                    {'data': 'donor'},
+                    {
+                        'data': 'amount',
+                        'render': $.fn.dataTable.render.number(',', '.', 2, '$')
+                    },
+                    {'data': 'date'},
+                    {'data': 'description'},
+                    {'data': 'city'},
+                    {'data': 'state'},
+                    {'data': 'zipcode'}
+                ]
+            });
+        });
+    </script>
+{% endblock %}

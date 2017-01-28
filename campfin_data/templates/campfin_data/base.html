@@ -1,0 +1,67 @@
+{% load humanize %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="http://kuow.org/sites/kuow/themes/station/favicon.ico" type="image/vnd.microsoft.icon" />
+        <link rel="shortcut icon" href="http://kuow.org/sites/kuow/themes/station/favicon.ico" type="image/vnd.microsoft.icon" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css" />
+
+        <link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Bangers|Lato:300,700,700italic,900,italic,regular&amp;subset=latin" media="all" />
+        {% block styles %}
+          <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+        {% endblock styles %}
+        {% block titlesection %}
+          <title>KUOW Campaign Finance{% if title %}: {{ title }}{% endif %}</title>
+        {% endblock titlesection %}
+    </head>
+    <body{% block scrollspy %}{% endblock %}>
+        {% block nav %}
+          <nav class="navbar navbar-fixed-top navbar-light bg-faded">
+            <ul class="nav navbar-nav">
+              <li class="nav-item">
+                <a href="/">
+                  <img class="logo" src="{% static 'images/logo.png' %}">
+                </a>
+              </li>
+              <li class="nav-item" id="year_container">
+                <span>
+                  <select id="filing_year_select">
+                    <option value="all"{% if showing_year == 'all' %}selected{% endif %}>Show all election years</option>
+                    {% for year in years %}
+                      <option value="{{ year|safe }}"{% if showing_year == year %}selected{% endif %}>Show{% if showing_year == year %}ing{% endif %} election year {{ year|safe }}</option>
+                    {% endfor %}
+                  </select>
+                </span>
+              </li>
+            </ul>
+            <form class="form-inline search-form pull-xs-right" action="/search" method="get">
+              <input class="form-control" type="text" name="q" placeholder="Search">
+              <button class="btn btn-success-outline" type="submit">Search</button>
+            </form>
+          </nav>
+        {% endblock nav %}
+
+        {% block content %}
+        {% endblock content %}
+
+        {% block javascript %}
+          <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.4/URI.min.js"></script>
+          <script type="text/javascript">
+          $(document).ready(function() {
+            $('#filing_year_select').change(function() {
+              window.location.href = URI().removeSearch("year").addSearch("year", $('#filing_year_select').val());
+            });
+          });
+          </script>
+        {% endblock javascript %}
+    </body>
+</html>

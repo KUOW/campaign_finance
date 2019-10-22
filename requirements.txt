@@ -36,7 +36,7 @@ python-dateutil==2.5.3
 python-Levenshtein==0.12.0
 pytz==2016.4
 ratelim==0.1.6
-requests==2.9.1
+requests==2.20.0
 requests-aws4auth==0.9
 rlr==2.4
 simplecosine==1.1

@@ -22,7 +22,7 @@ haversine==0.4.5
 highered==0.2.1
 jellyfish==0.5.6
 -e git://github.com/onyxfish/leather.git@fc565fd6568aa5de8c91fff823afb1d9032bc60a#egg=leather
-lxml==3.6.0
+lxml==4.6.2
 Metafone==0.5
 numpy==1.11.0
 pandas==0.18.1

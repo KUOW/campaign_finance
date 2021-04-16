@@ -9,7 +9,7 @@ dedupe==1.4.15
 dedupe-hcluster==0.3.2
 Django==1.11.23
 django-cors-headers==1.1.0
-django-debug-toolbar==1.4
+django-debug-toolbar==1.11.1
 -e git+https://github.com/toastdriven/django-haystack.git@cd7380e35c0950861d5fd07142d4c3c2aa442005#egg=django_haystack
 DoubleMetaphone==0.1
 elasticsearch==2.3.0
